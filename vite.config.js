@@ -7,7 +7,7 @@ export default defineConfig( ({mode}) => {
   const isProd = mode === 'production'
 
   return {
-    base: isProd ? '/my-noteas-react/' : '/',
+    base: isProd ? '/my-notes-react/' : '/',
     plugins: [react()],
   }
   
