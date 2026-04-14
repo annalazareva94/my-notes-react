@@ -1,0 +1,129 @@
+@font-face {
+  font-family: 'BadScript-Regular';
+  src: url('./assets/fonts/BadScript-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+    margin: 0;
+    padding: 0 100px;
+}
+
+h1 {
+    font-family: BadScript-Regular;
+    margin: 0;
+}
+
+.notes-container {
+    margin: 0 auto;
+    max-width: 700px;
+}
+
+.notes-list {
+    display: flex;
+    max-width: 700px;
+    flex-direction: column;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.note-item {
+    box-shadow: 4px 4px 20px 0 rgba(206, 206, 221, 0.50);
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.form-container input,
+.form-container textarea,
+.note-item button,
+.cancel-btn {
+    padding: 10px;
+    border-radius: 15px;
+    width: 100%;
+    margin: 0!important;
+    -webkit-background-clip: text;
+    border: 2px solid #FF7F48;
+}
+
+.cancel-btn {
+    margin: auto!important;
+}
+
+.form-container textarea {
+    max-width: 700px;
+}
+
+.form-container .add-note-btn {
+    max-width: 200px;
+    margin: auto;
+    padding: 5px 20px;
+    font-family: BadScript-Regular;
+    color: #000000;
+    border-radius: 20px;
+    background: #FFB6C1;
+    box-shadow: 4px 4px 20px 0 rgba(206, 206, 221, 14.5);
+    border: unset;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.form-container .add-note-btn:before {
+    content: "";
+    position: absolute;
+    width: 15%;
+    height: 180%;
+    top: 100%;
+    left: -100%;
+    filter: blur(8px);
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0) 100%);
+    transform: rotate(-40deg);
+    animation: diagonal-shine 2.0s infinite alternate;
+}
+
+.note-item .btn-container {
+    display: flex;
+    gap: 10px;
+}
+
+.note-item .btn-container button,
+.cancel-btn {
+    max-width: 200px;
+    cursor: pointer;
+}
+
+.note-item .btn-container button:hover,
+.cancel-btn:hover {
+    background: #FFB6C1;
+}
+
+.note-item h3, 
+.note-item p {
+    font-family: BadScript-Regular;
+}
+
+.add-note-btn.not-alowed {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+@keyframes diagonal-shine {
+  0% {
+    top: 30%;
+    left: -350%;
+  }
+  100% {
+    top: -50%;
+    left: 200%;
+  }
+}
