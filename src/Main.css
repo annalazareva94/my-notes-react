@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'BadScript-Regular';
-  src: url('./assets/fonts/BadScript-Regular.ttf') format('truetype');
+  font-family: 'CourierPrime-Regular';
+  src: url('./assets/fonts/CourierPrime-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -11,7 +11,7 @@ body {
 }
 
 h1 {
-    font-family: BadScript-Regular;
+    font-family: 'CourierPrime-Regular', system-ui, sans-serif;
     margin: 0;
 }
 
@@ -33,7 +33,18 @@ h1 {
     padding: 20px;
     border-radius: 20px;
     width: 100%;
+    /* max-height: 205px;
+    overflow: hidden; */
 }
+
+/* реализовать позже */
+
+/* .note-item p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+} */
 
 .form-container {
     display: flex;
@@ -52,6 +63,7 @@ h1 {
     margin: 0!important;
     -webkit-background-clip: text;
     border: 2px solid #FF7F48;
+    font-family: 'CourierPrime-Regular', system-ui, sans-serif;
 }
 
 .cancel-btn {
@@ -60,13 +72,14 @@ h1 {
 
 .form-container textarea {
     max-width: 700px;
+    min-height: 147px;
 }
 
 .form-container .add-note-btn {
     max-width: 200px;
     margin: auto;
     padding: 5px 20px;
-    font-family: BadScript-Regular;
+    font-family: 'CourierPrime-Regular', system-ui, sans-serif;
     color: #000000;
     border-radius: 20px;
     background: #FFB6C1;
@@ -75,6 +88,11 @@ h1 {
     position: relative;
     cursor: pointer;
     overflow: hidden;
+}
+
+.info-container,
+.info-container button {
+    font-family: 'CourierPrime-Regular', system-ui, sans-serif;
 }
 
 .form-container .add-note-btn:before {
@@ -108,7 +126,11 @@ h1 {
 
 .note-item h3, 
 .note-item p {
-    font-family: BadScript-Regular;
+    font-family: 'CourierPrime-Regular', system-ui, sans-serif;
+}
+
+.note-item h3 {
+    font-weight: 500;
 }
 
 .add-note-btn.not-alowed {

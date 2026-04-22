@@ -1,4 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
+import React, { useRef } from "react";
+import Cropper from "react-cropper";
+import "cropperjs/dist/cropper.css";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './Main.css'
@@ -12,21 +15,24 @@ function App() {
       title: 'Моя первая заметка',
       date: '2026-03-06',
       content: 'тестовая заметка для примера',
-      background: ''
+      background: '',
+      textcolor: ''
     },
     {
       id: 2,
       title: 'Моя вторая заметка',
       date: '2026-03-06',
       content: 'в этом массиве у нас объекты с несколькими полями, кторые мы будем потом менять, чтобы они не были захардкожены',
-      background: ''
+      background: '',
+      textcolor: ''
     },
     {
       id: 3,
       title: 'Моя третья заметка',
       date: '2026-03-06',
       content: 'также надо будет сделать выбор даты и генерацию id',
-      background: '' 
+      background: '',
+      textColor: ''
     },
   ]
 
@@ -57,9 +63,24 @@ function App() {
 
   const [background, setBackground] = useState('');
 
+  const [textColor, setTextColor] = useState('#000000');
+
   const [editingId, setEditingId] = useState(null);
 
   const [sortNotes, setSortNotes] = useState(initialSorting);
+
+  const [showCropper, setShowCropper] = useState(false);
+
+  const [imageToCrop, setImageToCrop] = useState('');
+
+  const fileInputRef = useRef(null);
+
+  // это для прокрутки
+  const elementRef = useRef(null);
+
+  const handleScroll = () => {
+    elementRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
 
 
    //здесь мы скопировали список notes ([...notes]), чтобы не изменять исходный массив напрямую 
@@ -87,16 +108,25 @@ function App() {
         date: startDate.toISOString(),
         content: content,
         background: background,
+        textColor: textColor,
       }
 
       setNotes([...notes, newNote])
     } else {
       const updatedNotes = notes.map(note => 
-        note.id === editingId ? { ...note, title, content, date: startDate.toISOString(), background} : note
+        note.id === editingId ? { ...note, title, content, date: startDate.toISOString(), background, textColor} : note
       )
 
-      setNotes(updatedNotes)
+      const editedNoteId = editingId;
+
+      setNotes(updatedNotes);
       setEditingId(null);
+
+      setTimeout(() => {
+        const noteElement = document.querySelector(`[data-note-id="${editedNoteId}"]`);
+        noteElement.scrollIntoView({ behavior: 'smooth' });
+      }, 0);
+      
     }
 
     
@@ -104,6 +134,11 @@ function App() {
     setContent('')
     setStartDate(new Date())
     setBackground('')
+    setTextColor('#000000')
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
 
   }
 
@@ -129,6 +164,7 @@ function App() {
     setContent(note.content)
     setStartDate(new Date(note.date))
     setBackground(note.background)
+    setTextColor(note.textColor || '#000000')
   }
   
 
@@ -137,10 +173,10 @@ function App() {
   // в качестве id - обращаемся к note.is (в данном случае у нас есть это поле в массиве, 
   // если нет, то в аргумент лучше передавать index)
   const fullNotesList = sortedNotes.map((note) => (
-    <div key={note.id} className="note-item" style={note.background ? { backgroundImage: `url(${note.background})`, backgroundSize: 'cover' } : {}}>
+    <div key={note.id} data-note-id={note.id} className="note-item" style={note.background ? { backgroundImage: `url(${note.background})`, backgroundSize: 'cover', color: note.textColor || '#000000'} : {}}>
         <div className='btn-container'>
-          <button onClick={() => removeNote(note.id)}>Удалить запись</button>
-          <button onClick={() => editNote(note)}>Изменить запись</button>
+          <button onClick={() => { editNote(note); handleScroll(); }}>Edit note</button>
+          <button onClick={() => removeNote(note.id)}>Delete note</button>
         </div>
         
         <h3>{note.title}</h3>
@@ -151,6 +187,8 @@ function App() {
 
   const isFormValid = title.trim() !== '' && content.trim() !== '';
 
+  const cropperRef = useRef(null);
+
   const handleFileChange = (e) => {
     const file = e.target.files[0]
     if (file) {
@@ -158,7 +196,8 @@ function App() {
       const reader = new FileReader()
       //onload - это функция, которая вызовется автоматически, когда файл будет прочитан.
       reader.onload = () => {
-        setBackground(reader.result);
+        setImageToCrop(reader.result);
+        setShowCropper(true);
       };
       reader.readAsDataURL(file);
     } else {
@@ -168,26 +207,57 @@ function App() {
 
   return (
     <div className="notes-container">
-      <h1>Заметки</h1>
-      <form onSubmit={addNote} className='form-container'>
-        <input required type="text" value={title} placeholder='Заголовок' onChange={(e) => setTitle(e.target.value)} />
+      <h1>Notes</h1>
+      <form onSubmit={addNote} ref={elementRef} className='form-container'>
+        <input required type="text" value={title} placeholder='Title' onChange={(e) => setTitle(e.target.value)} />
         <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
-        <textarea required type="text" value={content} placeholder='Текст заметки' onChange={(e) => setContent(e.target.value)} />
-        <input type="file" accept="image/*" onChange={handleFileChange}></input>
-        <button className={`add-note-btn ${!isFormValid ? 'not-allowed' : ''}`} type="submit" >{editingId ? 'Сохранить' : 'Добавить'} запись</button>
+        <textarea required type="text" value={content} placeholder='Note text' onChange={(e) => setContent(e.target.value)} />
+        <input type="file" accept="image/*" onChange={handleFileChange} ref={fileInputRef}></input>
+        {showCropper ? (
+           <div>
+              <Cropper
+                src={imageToCrop}
+                style={{ height: 400, width: "100%" }}
+                initialAspectRatio={16 / 9}
+                guides={false}
+                ref={cropperRef}
+              />
+              <button onClick={() => {
+                // получаем экземпляр cropper
+                const cropper = cropperRef.current?.cropper;
+                if (cropper) {
+                  // получаем холст с обрезанным изображением
+                  const canvas = cropper.getCroppedCanvas();
+                  // переобразовываем в Data URL
+                  const croppedImageUrl = canvas.toDataURL();
+                  // сохраняем в состояние background
+                  setBackground(croppedImageUrl);
+                }
+                
+                setShowCropper(false);
+              }} >Apply</button>
+            </div>
+         ) : (
+              <img src={background} />
+        )}
+        {editingId && (
+          <input placeholder='Color' type="color" value={textColor} onChange={(e) => setTextColor(e.target.value)} />
+        )}
+        <button className={`add-note-btn ${!isFormValid ? 'not-allowed' : ''}`} type="submit" >{editingId ? 'Save' : 'Add'} note</button>
         {editingId && (
             <button type="button"  className='cancel-btn' onClick={() => {
               setEditingId(null);
               setTitle('');
               setContent('');
               setStartDate(new Date());
-              setBackground('')
-            }}>Отмена</button>
+              setBackground('');
+              setTextColor('#000000');
+            }}>Cancel</button>
           )}
       </form>
       <div className='info-container'>
-        <p>Создано заметок: {notes.length}</p>
-        <button onClick={() => setSortNotes(prev => !prev)} >Сначала {sortNotes ? 'новые' : 'старые'}</button>
+        <p>Notes created: {notes.length}</p>
+        <button onClick={() => setSortNotes(prev => !prev)} >{sortNotes ? 'New' : 'Old'} first</button>
       </div>
       <div className='notes-list'>
         {fullNotesList}
