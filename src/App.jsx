@@ -9,32 +9,7 @@ import './Main.css'
 
 function App() {
 
-  const noteList = [
-    {
-      id: 1,
-      title: 'Моя первая заметка',
-      date: '2026-03-06',
-      content: 'тестовая заметка для примера',
-      background: '',
-      textcolor: ''
-    },
-    {
-      id: 2,
-      title: 'Моя вторая заметка',
-      date: '2026-03-06',
-      content: 'в этом массиве у нас объекты с несколькими полями, кторые мы будем потом менять, чтобы они не были захардкожены',
-      background: '',
-      textcolor: ''
-    },
-    {
-      id: 3,
-      title: 'Моя третья заметка',
-      date: '2026-03-06',
-      content: 'также надо будет сделать выбор даты и генерацию id',
-      background: '',
-      textColor: ''
-    },
-  ]
+  const noteList = []
 
   //тут мы изначально смотрим, есть ли у нас вообще что то в localStorage
   const savedNotes = localStorage.getItem('notes');
