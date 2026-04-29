@@ -139,6 +139,31 @@ h1 {
     pointer-events: none;
 }
 
+.clear-btn {
+    font-family: 'CourierPrime-Regular', system-ui, sans-serif;
+    border: unset;
+    padding: 0;
+    background: unset;
+    display: flex;
+    cursor: pointer;
+}
+
+.text-color-box {
+    display: flex;
+    align-items: center;
+}
+
+.text-color-box p {
+    font-family: 'CourierPrime-Regular', system-ui, sans-serif;
+    margin-left: 20px;
+}
+
+.text-color-box input {
+    border-radius: 0;
+    max-width: 40px;
+    padding: 0;
+}
+
 @keyframes diagonal-shine {
   0% {
     top: 30%;

@@ -216,7 +216,15 @@ function App() {
               <img src={background} />
         )}
         {editingId && (
-          <input placeholder='Color' type="color" value={textColor} onChange={(e) => setTextColor(e.target.value)} />
+          <button type="button"  className='clear-btn' onClick={() => {
+              setBackground('');
+            }}>Clear background</button>
+        )}
+        {editingId && (
+          <div className='text-color-box'>
+            <input placeholder='Color' type="color" value={textColor} onChange={(e) => setTextColor(e.target.value)} />
+            <p>Text color</p>
+          </div>
         )}
         <button className={`add-note-btn ${!isFormValid ? 'not-allowed' : ''}`} type="submit" >{editingId ? 'Save' : 'Add'} note</button>
         {editingId && (
